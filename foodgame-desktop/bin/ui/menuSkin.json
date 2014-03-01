@@ -6,7 +6,7 @@
 		"blue" : { "r": 0, "g": 0, "b": 1, "a": 1 },
 	},
 	"com.badlogic.gdx.graphics.g2d.BitmapFont": {
-		"black": { "file": "data/fonts/menu.fnt" }
+		"black": { "file": "fonts/menu.fnt" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 		"default": { "font": black, "fontColor": black }

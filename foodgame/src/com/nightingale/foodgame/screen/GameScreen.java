@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector2;
 import com.nightingale.foodgame.view.GameRenderer;
 
 public class GameScreen implements Screen, InputProcessor{
@@ -31,6 +32,7 @@ public class GameScreen implements Screen, InputProcessor{
 	@Override
 	public void show() {
 		renderer = new GameRenderer(game);
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class GameScreen implements Screen, InputProcessor{
 
 	@Override
 	public void dispose() {
-		
+		renderer.dispose();
 	}
 	
 	@Override
@@ -73,7 +75,8 @@ public class GameScreen implements Screen, InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		System.out.println(screenX+ " " + screenY);
+		
 		return false;
 	}
 
