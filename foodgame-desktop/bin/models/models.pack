@@ -1,0 +1,96 @@
+
+models.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cfood
+  rotate: false
+  xy: 1, 13
+  size: 206, 153
+  orig: 206, 153
+  offset: 0, 0
+  index: -1
+bfood3
+  rotate: false
+  xy: 209, 112
+  size: 56, 54
+  orig: 56, 54
+  offset: 0, 0
+  index: -1
+food2
+  rotate: false
+  xy: 209, 56
+  size: 56, 54
+  orig: 56, 54
+  offset: 0, 0
+  index: -1
+bfood5
+  rotate: false
+  xy: 209, 1
+  size: 55, 53
+  orig: 55, 53
+  offset: 0, 0
+  index: -1
+food4
+  rotate: false
+  xy: 266, 1
+  size: 55, 53
+  orig: 55, 53
+  offset: 0, 0
+  index: -1
+bfood2
+  rotate: false
+  xy: 267, 110
+  size: 51, 56
+  orig: 51, 56
+  offset: 0, 0
+  index: -1
+food1
+  rotate: false
+  xy: 320, 110
+  size: 51, 56
+  orig: 51, 56
+  offset: 0, 0
+  index: -1
+bfood4
+  rotate: false
+  xy: 373, 112
+  size: 51, 54
+  orig: 51, 54
+  offset: 0, 0
+  index: -1
+food5
+  rotate: false
+  xy: 267, 57
+  size: 53, 51
+  orig: 53, 51
+  offset: 0, 0
+  index: -1
+bfood1
+  rotate: false
+  xy: 322, 62
+  size: 57, 46
+  orig: 57, 46
+  offset: 0, 0
+  index: -1
+food3
+  rotate: false
+  xy: 323, 6
+  size: 51, 54
+  orig: 51, 54
+  offset: 0, 0
+  index: -1
+food0
+  rotate: false
+  xy: 381, 64
+  size: 57, 46
+  orig: 57, 46
+  offset: 0, 0
+  index: -1
+bfood0
+  rotate: false
+  xy: 381, 18
+  size: 54, 44
+  orig: 54, 44
+  offset: 0, 0
+  index: -1
