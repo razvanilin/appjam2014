@@ -16,15 +16,16 @@ public class Food {
 	}
 	
 	private FoodState state;
+	private int textureIndex = -1;
 	
 	private static final float SIZE = 1.0f;
 	
-	private HashMap<Rectangle, FoodState> foods;
+	private HashMap<Rectangle, HashMap<FoodState, Integer> > foods;
 	private Vector2 position;
 	private Rectangle bounds = new Rectangle();
 	
 	public Food() {
-		foods = new HashMap<Rectangle, FoodState>();
+		foods = new HashMap<Rectangle, HashMap<FoodState, Integer>>();
 		
 		bounds.x = 0;
 		bounds.y = 0;
@@ -40,7 +41,10 @@ public class Food {
 		newFood.x = position.x;
 		newFood.y = position.y;
 		
-		foods.put(newFood, state);
+		HashMap<FoodState, Integer> map = new HashMap<FoodState, Integer>();
+		map.put(state, textureIndex);
+		
+		foods.put(newFood, map);
 	}
 	
 	public Vector2 getPosition() {
@@ -63,8 +67,12 @@ public class Food {
 		this.state = state;
 	}
 	
-	public HashMap<Rectangle, FoodState> getFood() {
+	public HashMap<Rectangle, HashMap<FoodState, Integer>> getFood() {
 		return foods;
+	}
+	
+	public void setFood(HashMap<Rectangle, HashMap<FoodState, Integer>> foods) {
+		this.foods = foods;
 	}
 	
 
