@@ -37,6 +37,7 @@ public class GameRenderer {
 	private Sound bkSound;
 	private ParticleEffect effect;
 	private ArrayList<ParticleEffect> effects = new ArrayList<ParticleEffect>();
+	ShapeRenderer shape;
 	
 	private Food food;
 	
@@ -45,6 +46,7 @@ public class GameRenderer {
 		loadItems();
 	}
 	
+	// Loading all the necessary items
 	private void loadItems() {
 		backgroundTexture = new TextureRegion(new Texture(
 				Gdx.files.internal("background/background.png")),
@@ -54,13 +56,17 @@ public class GameRenderer {
 				Gdx.graphics.getHeight());
 		batch = new SpriteBatch();
 		
+		// Loading the atlas which contains the spritesheet
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("models/models.pack"));
+		// getting the sprites with for good food
 		for (int i = 0; i<5; i++) {
 			goodTexture[i] = atlas.findRegion("food"+i);
 		}
+		// getting the sprites for bad food
 		for (int i = 0; i < 5; i++) {
 			badTexture[i] = atlas.findRegion("bfood"+i);
 		}
+		// getting the sprite for covered food
 		coveredTexture = atlas.findRegion("cfood");
 		
 		food = new Food();
@@ -74,6 +80,7 @@ public class GameRenderer {
 		
 		shape = new ShapeRenderer();
 		
+		// Loading the particle effect used when snatching the food
 		effect = new ParticleEffect();
 		effect.load(Gdx.files.internal("effects/mist.p"), Gdx.files.internal("effects"));
 		effect.setPosition(0, 0);
@@ -95,20 +102,23 @@ public class GameRenderer {
 	int ending = 3;
 	boolean flash = false;
 	float flashDuration = 0.0f;
-	ShapeRenderer shape;
 	
+	// Render the game
 	public void render(float delta)
 	{
+		// Starting the timers used to place food on the screen at certain intervals of time
 		timePassed += delta;
 		timeGood += delta;
 		timeBad+=delta;
 		timeCoveredAppearance+=delta;
 		
+		// Drawing everything on the screen
 		batch.begin();
 		batch.draw(backgroundTexture, 0, 0);
 		//batch.draw(coveredTexture, touchedArea.x, touchedArea.y, 100.0f, 100.0f);
 		drawFood();
 		gameFont.draw(batch, String.valueOf(score), 20.0f, Gdx.graphics.getHeight()-20.0f);
+		// Drawing the lives on screen
 		for (int i = ending;i>0;i--){
 			if (i == 3)
 				batch.draw(goodTexture[1], Gdx.graphics.getWidth()/1.3f, Gdx.graphics.getHeight()/1.1f, 0.5f*Gdx.graphics.getPpcX(), 0.5f*Gdx.graphics.getPpcY());
@@ -118,9 +128,11 @@ public class GameRenderer {
 				batch.draw(goodTexture[1], Gdx.graphics.getWidth()/1.11f, Gdx.graphics.getHeight()/1.1f, 0.5f*Gdx.graphics.getPpcX(), 0.5f*Gdx.graphics.getPpcY());
 
 		}
+		// Displaying the particle effects
 		for (ParticleEffect eff : effects) {
 			eff.draw(batch, delta/2);
 		}
+		// Displaying a flash when the user snatched bad food
 		if (flash) {
 			
 			  shape.begin(ShapeType.Filled);
@@ -133,6 +145,7 @@ public class GameRenderer {
 		}
 		batch.end();
 		
+		// Placing the food on-screen
 		if (timeGood > .8f) {
 			food.addFood(
 					new Vector2(
@@ -165,8 +178,10 @@ public class GameRenderer {
 		
 		int k = 0;
 		
+		// Animating the food
 		food.animate(delta*100);
 		
+		// Checking the collision between the touched area and the food
 		touchedArea.x = Gdx.input.getX();
 		touchedArea.y = Gdx.graphics.getHeight()-Gdx.input.getY();
 		for (Rectangle rect : food.getFood().keySet()) {
@@ -175,15 +190,22 @@ public class GameRenderer {
 					food.getFood().get(rect).containsKey(FoodState.GOOD)) {
 				
 				System.out.println("works");
+				// Placing the effect on the food sprite
 				effect.setPosition(rect.x, rect.y);
 				effect.start();
 				effects.add(effect);
+				// tagging the food to be removed
 				removableRect[k] = rect;
 				k++;
 				score++;
+				// playing the sound
 				eatSound.play();
+				// reseting the coordinates of the touched area
+				touchedArea.x = -100;
+				touchedArea.y = -100;
 			}
 			
+			// This needs to be fixed
 			if (touchedArea.x >= rect.x && touchedArea.x <= rect.x+rect.width &&
 					touchedArea.y >= rect.y && touchedArea.y <= rect.y+rect.height &&
 					food.getFood().get(rect).containsKey(FoodState.COVERED)) {
@@ -194,6 +216,7 @@ public class GameRenderer {
 				}
 			}
 			
+			// collision with bad food
 			if (touchedArea.x >= rect.x && touchedArea.x <= rect.x+rect.width &&
 					touchedArea.y >= rect.y && touchedArea.y <= rect.y+rect.height &&
 					food.getFood().get(rect).containsKey(FoodState.BAD)) {
@@ -205,12 +228,15 @@ public class GameRenderer {
 				ending--;
 				flash = true;
 				ewSound.play(0.5f);
+				// the device will vibrate for x milliseconds
 				Gdx.input.vibrate(300);
-			
+				
+				touchedArea.x = -100;
+				touchedArea.y = -100;
 			}
 		}
 		
-		
+		// Removing the touched food from the hash map
 		for (int i=0;i<k;i++){
 			HashMap<Rectangle, HashMap<FoodState, Integer>> tempMap = new HashMap<Rectangle, HashMap<FoodState, Integer>>();
 			tempMap = food.getFood();
@@ -219,25 +245,42 @@ public class GameRenderer {
 		}
 		k = 0;
 		
+		// cleaning the effects list
+		for (int i=0; i< effects.size(); i++) {
+			if (effects.get(i).isComplete()) {
+				effects.remove(i);
+				i--;
+			}
+		}
 		
+		// if ending reaches 0 the lives are gone and it's gameOver
+		// the Ending Screen will be called
 		if (ending == 0) {
 			game.setScreen(new EndScreen(score, game));
 		}
-		touchedArea = new Vector2(0, 0);
+		
+		//reseting the touched area
+		touchedArea.x = -100;
+		touchedArea.y = -100;
 		
 	}
 	
+	// Draw the food
 	private void drawFood() {
-		Rectangle[] removableRect = new Rectangle[100];
-		int k = 0;
+		
+		// Go through the hash map keys and check the state of the food
+		// Draw the food according with their state
 		for (Rectangle rect : food.getFood().keySet()) {
 			int index;
 			HashMap<FoodState, Integer> map = new HashMap<FoodState, Integer>();
 			map = food.getFood().get(rect);
 			if (map.containsKey(FoodState.GOOD)){
+				// if the value is -1 it means that it has no texture assigned
 				if (map.get(FoodState.GOOD) != -1)
+					// if it's not -1 then the index will be the value in the map
 					index = map.get(FoodState.GOOD);
 				else {
+					// if it's -1 then assign an index between 0 and 5
 					index = (int)(Math.random()*5);
 					map.remove(FoodState.GOOD);
 					map.put(FoodState.GOOD, index);
@@ -269,6 +312,8 @@ public class GameRenderer {
 			}
 			
 			else if (map.containsKey(FoodState.COVERED)) {
+				// if the food is covered check the dimension of the object
+				// if it's bellow 0.8 units the texture and state will be "covered" 
 				if (rect.width < .8f * Gdx.graphics.getPpcX())
 					batch.draw(coveredTexture,
 							rect.x,
@@ -276,7 +321,10 @@ public class GameRenderer {
 							rect.width,
 							rect.height
 							);
+				// otherwise the state will be changed to be either GOOD or BAD and the texture changed accordingly
+				// This way the food will appear uncovered for a brief period of time
 				else {
+					// 'rand' is used to make 50/50 chances for the covered food to be BAD or GOOD
 					int rand = (int)(Math.random()*2);
 					if (rand % 2 == 0){ 
 						map.put(FoodState.BAD, (int)(Math.random()*5));
@@ -309,6 +357,7 @@ public class GameRenderer {
 					}
 				}
 			}
+			// The hash map will be updated 
 			HashMap<Rectangle, HashMap<FoodState, Integer>> tempMap = new HashMap<Rectangle, HashMap<FoodState, Integer>>();
 			tempMap = food.getFood();
 			tempMap.put(rect, map);
