@@ -72,13 +72,14 @@ public class GameScreen implements Screen, InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		System.out.println(screenX+ " " + screenY);
+		renderer.setTouchedArea(new Vector2(screenX, Gdx.graphics.getHeight()-screenY));
 		
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		renderer.setTouchedArea(new Vector2(-100.0f, -100.0f));
 		return false;
 	}
 

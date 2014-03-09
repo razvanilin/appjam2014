@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class EndScreen implements Screen {
 
 	private TextureRegion backgroundTexture;
-	private BitmapFont white, black;
 	private Skin skin;
 	private SpriteBatch spriteBatch;
 	private int score;
@@ -79,7 +77,7 @@ public class EndScreen implements Screen {
 		buttonBack.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new MenuScreen(game));
 			}
 		});
 
