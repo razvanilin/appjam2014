@@ -31,31 +31,28 @@ public class FoodHandler {
 	public void addFood(Vector2 position, FoodState state) {
 		foodList.add(new Food(position, state));
 	}
-	
+
 	public void animate(float delta) {
-		Food[] removableFood = new Food[100];
-		int i = 0;
-		for (Food food : foodList) {
+		for (int i=0;i<foodList.size();i++) {
+			Food food = foodList.get(i);
 			if (food.getBounds().width < 1.2f*Gdx.graphics.getPpcX()){
-				
+
 				food.setBounds(new Rectangle(
 						food.getBounds().x,
 						food.getBounds().y,
 						food.getBounds().width + delta,
 						food.getBounds().height + delta
 						)
-				);			
+						);			
 			}
 			else {
-				removableFood[i] = food;
-				i++;
+				foodList.remove(i);
+				i--;
 			}
 		}
-		
-		for (int k =0; k<i; k++) {
-			foodList.remove(k);
-			i--;
-		}
-		
+	}
+	
+	public void clearList() {
+		foodList.clear();
 	}
 }
