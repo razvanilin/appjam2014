@@ -11,39 +11,46 @@ public class Food {
 	public enum FoodState {
 		GOOD,
 		BAD,
-		COVERED
+		COVERED,
+		GOOD_UNCOVERED,
+		BAD_UNCOVERED
 	}
-
 	private FoodState state;
-	private int textureIndex = -1;
+	
+	private FoodHandler handler = FoodHandler.getInstance();
+	
+	private int textureIndex;
 
 	private static final float SIZE = .0f;
 
 	private HashMap<Rectangle, HashMap<FoodState, Integer> > foods;
-	private Vector2 position;
 	private Rectangle bounds = new Rectangle();
 
-	public Food() {
+	public Food(Vector2 position, FoodState state) {
 		foods = new HashMap<Rectangle, HashMap<FoodState, Integer>>();
-
-		bounds.x = 0;
-		bounds.y = 0;
+		
+		textureIndex = -1;
+		
+		bounds.x = position.x;
+		bounds.y = position.y;
 		bounds.width = SIZE * Gdx.graphics.getPpcX();
 		bounds.height = SIZE * Gdx.graphics.getPpcY();
+		
+		this.state = state;
 	}
 
 	public void addFood(Vector2 position, FoodState state)
 	{
-		Rectangle newFood = new Rectangle();
-		newFood.width = bounds.width;
-		newFood.height = bounds.height;
-		newFood.x = position.x;
-		newFood.y = position.y;
-
-		HashMap<FoodState, Integer> map = new HashMap<FoodState, Integer>();
-		map.put(state, textureIndex);
-
-		foods.put(newFood, map);
+		// Setting the food rectangle
+		bounds.x = position.x;
+		bounds.y = position.y;
+		bounds.width = SIZE * Gdx.graphics.getPpcX();
+		bounds.height = SIZE * Gdx.graphics.getPpcY();
+		
+		this.state = state;
+		textureIndex = -1;
+		// Giving the food to the handler
+//		FoodHandler.getInstance().addFood(this);
 	}
 
 	public void animate(float delta) {
@@ -51,15 +58,7 @@ public class Food {
 		int i = 0;
 		for (Rectangle rect : foods.keySet()) {
 			if (rect.width < 1.2f*Gdx.graphics.getPpcX()){
-				int rand = (int)(Math.random()*2);
-//				if (rand % 2 == 0){
-					rect.x += delta;
-					rect.y += delta;
-//				}
-//				else {
-					rect.x-=delta;
-					rect.y-=delta;
-//				}
+
 				rect.width += delta;
 				rect.height += delta;			
 			}
@@ -76,17 +75,12 @@ public class Food {
 		
 	}
 	
-
-	public Vector2 getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector2 position) {
-		this.position = position;
-	}
-
 	public Rectangle getBounds() {
 		return bounds;
+	}
+	
+	public void setBounds(Rectangle bounds) {
+		this.bounds = bounds;
 	}
 
 	public FoodState getState() {
@@ -95,6 +89,14 @@ public class Food {
 
 	public void setState(FoodState state) {
 		this.state = state;
+	}
+	
+	public int getIndex() {
+		return textureIndex;
+	}
+	
+	public void setIndex(int index) {
+		textureIndex = index;
 	}
 
 	public HashMap<Rectangle, HashMap<FoodState, Integer>> getFood() {
